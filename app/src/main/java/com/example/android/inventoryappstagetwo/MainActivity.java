@@ -125,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         petValues.put(ProductsContract.ProductsEntry.COLUMN_MOBILE_QUANTITY, 10);
         petValues.put(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_NAME, ProductsContract.ProductsEntry.SUPPLIER_NAME_TECH_COMPANY);
         petValues.put(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_EMAIL, "om.albaraa33@gmail.com");
-        petValues.put(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_PHONE, 788123456);
 
         // Insert a new row for Toto into the provider using the ContentResolver.
         // Use the {@link PetEntry#CONTENT_URI} to indicate that we want to insert
@@ -162,7 +161,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 ProductsContract.ProductsEntry.COLUMN_MOBILE_QUANTITY,
                 ProductsContract.ProductsEntry.COLUMN_SUPPLIER_NAME,
                 ProductsContract.ProductsEntry.COLUMN_SUPPLIER_EMAIL,
-                ProductsContract.ProductsEntry.COLUMN_SUPPLIER_PHONE
         };
 
         return new CursorLoader(
@@ -189,32 +187,4 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // longer using it.
         mProductCursorAdapter.swapCursor(null);
     }
-
-    /**
-     * Get user input from editor and save pet into database.
-     */
-    private void updateProductQuantity(Uri currentProductUri) {
-
-
-        ContentValues petValues = new ContentValues();
-
-
-        //Create a ContentValues object where column names are the keys
-        petValues.put(ProductsContract.ProductsEntry.COLUMN_MOBILE_QUANTITY, 40);
-
-            int rowsAffected = getContentResolver().update(currentProductUri, petValues, null, null);
-
-            // Show a toast message depending on whether or not the insertion was successful
-            if (rowsAffected == 0) {
-                // If the new content URI is null, then there was an error with insertion.
-                Toast.makeText(this, getString(R.string.editor_update_product_failed),
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                // Otherwise, the insertion was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.editor_update_product_successful),
-                        Toast.LENGTH_SHORT).show();
-            }
-
-    }
-
 }

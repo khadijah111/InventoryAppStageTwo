@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.util.Log;
 
 /**
- * {@link ContentProvider} for Pets app.
+ * {@link ContentProvider} for Products app.
  */
 public class ProductsProvider extends ContentProvider {
 
@@ -18,23 +18,14 @@ public class ProductsProvider extends ContentProvider {
      * Tag for the log messages
      */
     public static final String LOG_TAG = ProductsProvider.class.getSimpleName();
-
-    //Database Helper object
-    private ProductDBHelper productDbHelper;
-    /**
-     * Initialize the provider and the database helper object.
-     */
-
     /**
      * URI matcher code for the content URI for the pets table
      */
     private static final int PRODUCTS = 100;
-
     /**
      * URI matcher code for the content URI for a single pet in the pets table
      */
     private static final int PRODUCT_ID = 101;
-
     /**
      * UriMatcher object to match a content URI to a corresponding code.
      * The input passed into the constructor represents the code to return for the root URI.
@@ -52,6 +43,11 @@ public class ProductsProvider extends ContentProvider {
         sUriMatcher.addURI(ProductsContract.CONTENT_AUTHORITY, ProductsContract.PATH_PETS + "/#", PRODUCT_ID);
     }
 
+    /**
+     * Initialize the provider and the database helper object.
+     */
+    private ProductDBHelper productDbHelper;
+
     @Override
     public boolean onCreate() {
         productDbHelper = new ProductDBHelper(getContext());
@@ -68,17 +64,15 @@ public class ProductsProvider extends ContentProvider {
                         String sortOrder) {
         //1- ACCESS db USING mdbHelper
         SQLiteDatabase dataBase = productDbHelper.getReadableDatabase();
-
         Cursor cursor;
 
         //2- Using URiMatcher to find the kind of input URI 100 for hole table and 101 for specific row in table
         int match = sUriMatcher.match(uri);
 
-        switch (match)
-        {
+        switch (match) {
             case PRODUCTS:
                 //perform DB query in the hole Pets Table
-                cursor = dataBase.query(ProductsContract.ProductsEntry.TABLE_NAME,projection,selection,selectionArgs,null,null,sortOrder);
+                cursor = dataBase.query(ProductsContract.ProductsEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case PRODUCT_ID:
                 //perform DB query in Pets Table based on product_ID column to retrieve selected ROW/ROWS
@@ -87,16 +81,16 @@ public class ProductsProvider extends ContentProvider {
                 //SELECT * FROM products WHERE _ID = 3;
                 // This will perform a query on the products table where the _id equals 3 to return a
                 // Cursor containing that row of the table.
-                cursor = dataBase.query(ProductsContract.ProductsEntry.TABLE_NAME,projection,selection,selectionArgs,null,null,sortOrder);
+                cursor = dataBase.query(ProductsContract.ProductsEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             default:
-                throw new IllegalArgumentException("CANNOT query unknown URI: "+ uri);
+                throw new IllegalArgumentException("CANNOT query unknown URI: " + uri);
         }
 
         // Set notification URI on the Cursor,
         // so we know what content URI the Cursor was created for.
         // If the data at this URI changes, then we know we need to update the Cursor.
-        cursor.setNotificationUri(getContext().getContentResolver(),uri);
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
 
@@ -115,8 +109,7 @@ public class ProductsProvider extends ContentProvider {
         }
     }
 
-    private Uri insertProduct (Uri uri, ContentValues values)
-    {
+    private Uri insertProduct(Uri uri, ContentValues values) {
         /**---------------VALIDATION PROCESS---------------------**/
         // Check that the name is not null
         String name = values.getAsString(ProductsContract.ProductsEntry.COLUMN_MOBILE_NAME);
@@ -135,18 +128,9 @@ public class ProductsProvider extends ContentProvider {
         //Check that the supplier_name is valid and not null
         Integer supplierName = values.getAsInteger(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_NAME);
 
-        if (supplierName == null || ! ProductsContract.ProductsEntry.isValidSupplierName(supplierName)) {
+        if (supplierName == null || !ProductsContract.ProductsEntry.isValidSupplierName(supplierName)) {
             throw new IllegalArgumentException("Product requires valid supplier name");
         }
-
-        //Check the phone number
-       // Integer supplierPhone = values.getAsInteger(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_PHONE);
-
-//        if (! ProductsContract.ProductsEntry.isValidSupplierName(supplierPhone)) {
-//            throw new IllegalArgumentException("Product requires valid supplier phone");
-//        }
-
-        // No need to check the email any value are valid (including null).
 
         /*-----------ACCESS DATA BASE -------------------*/
         // Gets the database in write mode
@@ -169,6 +153,7 @@ public class ProductsProvider extends ContentProvider {
         // Return the new URI with the ID (of the newly inserted row) appended at the end
         return ContentUris.withAppendedId(uri, newRowId);
     }
+
     /**
      * Updates the data at the given selection and selection arguments, with the new ContentValues.
      */
@@ -183,7 +168,7 @@ public class ProductsProvider extends ContentProvider {
                 // so we know which row to update. Selection will be "_id=?" and selection
                 // arguments will be a String array containing the actual ID.
                 selection = ProductsContract.ProductsEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateProduct(uri, contentValues, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Update is not supported for " + uri);
@@ -198,14 +183,13 @@ public class ProductsProvider extends ContentProvider {
     private int updateProduct(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 
         //Validation the existing Name field
-       if( values.containsKey(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_NAME))
-       {
-           // Check that the name is not null
-           String name = values.getAsString(ProductsContract.ProductsEntry.COLUMN_MOBILE_NAME);
-           if (name == null) {
-               throw new IllegalArgumentException("Product requires a name");
-           }
-       }
+        if (values.containsKey(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_NAME)) {
+            // Check that the name is not null
+            String name = values.getAsString(ProductsContract.ProductsEntry.COLUMN_MOBILE_NAME);
+            if (name == null) {
+                throw new IllegalArgumentException("Product requires a name");
+            }
+        }
 
         // If the {@link ProductEntry #COLUMN_PRODUCT_PRICE} key is present,
         // check that the price value is valid.
@@ -223,7 +207,7 @@ public class ProductsProvider extends ContentProvider {
             //Check that the supplier_name is valid and not null
             Integer supplierName = values.getAsInteger(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_NAME);
 
-            if (supplierName == null || ! ProductsContract.ProductsEntry.isValidSupplierName(supplierName)) {
+            if (supplierName == null || !ProductsContract.ProductsEntry.isValidSupplierName(supplierName)) {
                 throw new IllegalArgumentException("Product requires valid supplier name");
             }
         }
@@ -238,7 +222,7 @@ public class ProductsProvider extends ContentProvider {
         SQLiteDatabase database = productDbHelper.getWritableDatabase();
 
         // Perform the update on the database and get the number of rows affected
-        int rowsUpdated = database.update(ProductsContract.ProductsEntry.TABLE_NAME, values,selection,selectionArgs);
+        int rowsUpdated = database.update(ProductsContract.ProductsEntry.TABLE_NAME, values, selection, selectionArgs);
 
         // If 1 or more rows were updated, then notify all listeners that the data at the
         // given URI has changed
@@ -262,13 +246,13 @@ public class ProductsProvider extends ContentProvider {
         switch (match) {
             case PRODUCTS:
                 // Delete all rows that match the selection and selection args
-                rowsDeleted =  database.delete(ProductsContract.ProductsEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = database.delete(ProductsContract.ProductsEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             case PRODUCT_ID:
                 // Delete a single row given by the ID in the URI
                 selection = ProductsContract.ProductsEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                rowsDeleted =  database.delete(ProductsContract.ProductsEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = database.delete(ProductsContract.ProductsEntry.TABLE_NAME, selection, selectionArgs);
                 break;
 
             default:
@@ -280,7 +264,6 @@ public class ProductsProvider extends ContentProvider {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return rowsDeleted;
-
     }
 
     /**

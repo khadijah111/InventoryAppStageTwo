@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Layout for a single list item in the list of pets -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="@dimen/activity_margin"
     android:layout_width="match_parent"
@@ -84,4 +84,4 @@
         android:layout_margin="15dp"
         android:hint="sale"
         android:focusable="false"/>
-</LinearLayout>
+</RelativeLayout>

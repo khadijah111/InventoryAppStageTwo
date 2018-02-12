@@ -29,7 +29,7 @@ import android.widget.Toast;
 import com.example.android.inventoryappstagetwo.data.ProductsContract;
 
 /**
- * Allows user to create a new pet or edit an existing one.
+ * Allows user to create a new product or edit an existing one.
  */
 public class DetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -37,43 +37,43 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     private static final int LOADER_ID = 0;
 
     /**
-     * EditText field to enter the pet's name
+     * EditText field to enter the product's name
      */
     private EditText mNameEditText;
 
     /**
-     * EditText field to enter the pet's breed
+     * EditText field to enter the product's breed
      */
     private EditText mPriceEditText;
 
     /**
-     * EditText field to enter the pet's weight
+     * EditText field to enter the product's weight
      */
     private EditText mQuantityEditText;
 
     /**
-     * EditText field to enter the pet's gender
+     * EditText field to enter the product's gender
      */
     private Spinner mSupplierNameSpinner;
 
     /**
-     * EditText field to enter the pet's breed
+     * EditText field to enter the product's breed
      */
     private EditText mEmailEditText;
 
     /**
-     * EditText field to enter the pet's weight
+     * EditText field to enter the product's weight
      */
    // private EditText mPhoneEditText;
     /**
-     * Content URI for the existing pet (null if it's a new pet)
+     * Content URI for the existing product (null if it's a new product)
      */
     private Uri mCurrentProductUri;
 
     private boolean mProductHasChanged = false;
 
     // OnTouchListener that listens for any user touches on a View, implying that they are modifying
-// the view, and we change the mPetHasChanged boolean to true.
+// the view, and we change the mproductHasChanged boolean to true.
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
@@ -83,7 +83,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         }
     };
     /**
-     * Gender of the pet. The possible values are:
+     * Gender of the product. The possible values are:
      * 0 for unknown gender, 1 for male, 2 for female.
      */
     private int mSupplierName = ProductsContract.ProductsEntry.SUPPLIER_NAME_UNKNOWN; // mean= 0;
@@ -99,24 +99,24 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         setContentView(R.layout.activity_details);
 
         // Examine the intent that was used to launch this activity,
-        // in order to figure out if we're creating a new pet or editing an existing one.
+        // in order to figure out if we're creating a new product or editing an existing one.
         Intent intent = getIntent();
         mCurrentProductUri = intent.getData();
 
-        // If the intent DOES NOT contain a pet content URI, then we know that we are
-        // creating a new pet.
+        // If the intent DOES NOT contain a product content URI, then we know that we are
+        // creating a new product.
         if (mCurrentProductUri == null) {
-            // This is a new pet, so change the app bar to say "Add a Pet"
+            // This is a new product, so change the app bar to say "Add a product"
             setTitle(getString(R.string.editor_activity_title_new_product));
 
             // Invalidate the options menu, so the "Delete" menu option can be hidden.
-            // (It doesn't make sense to delete a pet that hasn't been created yet.)
+            // (It doesn't make sense to delete a product that hasn't been created yet.)
             invalidateOptionsMenu();
         } else {
-            // Otherwise this is an existing pet, so change app bar to say "Edit Pet"
+            // Otherwise this is an existing product, so change app bar to say "Edit product"
             setTitle(getString(R.string.editor_activity_title_edit_mobile_product));
 
-            // Initialize a loader to read the pet data from the database
+            // Initialize a loader to read the product data from the database
             // and display the current values in the editor
             getLoaderManager().initLoader(LOADER_ID, null, this);
         }
@@ -164,19 +164,19 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     }
 
     /**
-     * Setup the dropdown spinner that allows the user to select the gender of the pet.
+     * Setup the dropdown spinner that allows the user to select the gender of the product.
      */
     private void setupSpinner() {
         // Create adapter for spinner. The list options are from the String array it will use
         // the spinner will use the default layout
-        ArrayAdapter genderSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_gender_options, android.R.layout.simple_spinner_item);
+        ArrayAdapter supplierSpinnerAdapter = ArrayAdapter.createFromResource(this,
+                R.array.array_supplier_options, android.R.layout.simple_spinner_item);
 
         // Specify dropdown layout style - simple list view with 1 item per line
-        genderSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        supplierSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 
         // Apply the adapter to the spinner
-        mSupplierNameSpinner.setAdapter(genderSpinnerAdapter);
+        mSupplierNameSpinner.setAdapter(supplierSpinnerAdapter);
 
         // Set the integer mSelected to the constant values
         mSupplierNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -213,7 +213,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        // If this is a new pet, hide the "Delete" menu item.
+        // If this is a new product, hide the "Delete" menu item.
         if (mCurrentProductUri == null) {
             MenuItem menuItem = menu.findItem(R.id.action_delete);
             menuItem.setVisible(false);
@@ -227,7 +227,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         switch (item.getItemId()) {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
-                // save pet or update pet to DB
+                // save product or update product to DB
                 saveProduct();
                 //exit the current Activity then go to Main catalog activity
                 finish();
@@ -240,7 +240,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             // Respond to a click on the "Up" arrow button in the app bar
 
             case android.R.id.home:
-                // If the pet hasn't changed, continue with navigating up to parent activity
+                // If the product hasn't changed, continue with navigating up to parent activity
                 // which is the {@link CatalogActivity}.
                 if (!mProductHasChanged) {
                     NavUtils.navigateUpFromSameTask(DetailsActivity.this);
@@ -269,10 +269,10 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     //get the data from textViews UI and INSERT it to the data base or UPDATE an existing fields
 
     /**
-     * Get user input from editor and save pet into database.
+     * Get user input from editor and save product into database.
      */
     private void saveProduct() {
-        ContentValues petValues = new ContentValues();
+        ContentValues productValues = new ContentValues();
         // Read from input fields
         // Use trim to eliminate leading or trailing white space
         String nameString = mNameEditText.getText().toString().trim();
@@ -281,18 +281,18 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         Integer supplierNameInteger = mSupplierName;
         String supplierEmailString = mEmailEditText.getText().toString().trim();
 
-        // Check if this is supposed to be a new pet
+        // Check if this is supposed to be a new product
         // and check if all the fields in the editor are blank
         //So return without any action needed
         if (mCurrentProductUri == null && //insert mode
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(priceString) &&
                 TextUtils.isEmpty(quantityString) && mSupplierName == ProductsContract.ProductsEntry.SUPPLIER_NAME_UNKNOWN) {
-            // Since no fields were modified, we can return early without creating a new pet.
+            // Since no fields were modified, we can return early without creating a new product.
             // No need to create ContentValues and no need to do any ContentProvider operations.
             return;
         }
         //Create a ContentValues object where column names are the keys
-        petValues.put(ProductsContract.ProductsEntry.COLUMN_MOBILE_NAME, nameString);
+        productValues.put(ProductsContract.ProductsEntry.COLUMN_MOBILE_NAME, nameString);
 
         // If the Price is not provided by the user, don't try to parse the string into an
         // integer value. Use 0 by default.
@@ -300,7 +300,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         if (!TextUtils.isEmpty(priceString)) {
             price = Integer.parseInt(priceString);
         }
-        petValues.put(ProductsContract.ProductsEntry.COLUMN_MOBILE_PRICE, price);
+        productValues.put(ProductsContract.ProductsEntry.COLUMN_MOBILE_PRICE, price);
 
         // If the weight is not provided by the user, don't try to parse the string into an
         // integer value. Use 0 by default.
@@ -308,23 +308,23 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         if (!TextUtils.isEmpty(quantityString)) {
             quantity = Integer.parseInt(quantityString);
         }
-        petValues.put(ProductsContract.ProductsEntry.COLUMN_MOBILE_QUANTITY, quantity);
+        productValues.put(ProductsContract.ProductsEntry.COLUMN_MOBILE_QUANTITY, quantity);
 
         //Create a ContentValues object where column names are the keys
-        petValues.put(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_NAME, supplierNameInteger);
+        productValues.put(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_NAME, supplierNameInteger);
 
         //Create a ContentValues object where column names are the keys
-        petValues.put(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_EMAIL, supplierEmailString);
+        productValues.put(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_EMAIL, supplierEmailString);
 
-        // If the intent DOES NOT contain a pet content URI, then we know that we are
-        // creating a new pet -----------INSERT MODE-------------.
-        if (mCurrentProductUri == null) {//INSERT new pet
+        // If the intent DOES NOT contain a product content URI, then we know that we are
+        // creating a new product -----------INSERT MODE-------------.
+        if (mCurrentProductUri == null) {//INSERT new product
             // Insert a new row for Toto into the provider using the ContentResolver.
-            // Use the {@link PetEntry#CONTENT_URI} to indicate that we want to insert
-            // into the pets database table.
+            // Use the {@link productEntry#CONTENT_URI} to indicate that we want to insert
+            // into the products database table.
             // Receive the new content URI that will allow us to access Toto's data in the future.
             Uri uri = getContentResolver().insert(ProductsContract.ProductsEntry.CONTENT_URI,  // the user dictionary content URI
-                    petValues); // the values to insert
+                    productValues); // the values to insert
 
             // Show a toast message depending on whether or not the insertion was successful
             if (uri == null) {
@@ -336,13 +336,13 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 Toast.makeText(this, getString(R.string.editor_insert_product_successful),
                         Toast.LENGTH_SHORT).show();
             }
-        } else { // Otherwise this is an EXISTING pet, so update the pet with content URI: mCurrentPetUri
+        } else { // Otherwise this is an EXISTING product, so update the product with content URI: mCurrentproductUri
             // and pass in the new ContentValues. Pass in null for the selection and selection args
-            // because mCurrentPetUri will already identify the correct row in the database that
+            // because mCurrentproductUri will already identify the correct row in the database that
             // we want to modify.
-            //Update an existing pet
+            //Update an existing product
             //------------------UPDATE MODE -------------------------
-            int rowsAffected = getContentResolver().update(mCurrentProductUri, petValues, null, null);
+            int rowsAffected = getContentResolver().update(mCurrentProductUri, productValues, null, null);
 
             // Show a toast message depending on whether or not the insertion was successful
             if (rowsAffected == 0) {
@@ -365,7 +365,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         // currently filtering.
 
 
-        // These are the Pets rows that we will retrieve.
+        // These are the products rows that we will retrieve.
         //Set the projection ..SELECT name, breed, weight, gender
         String[] projection = {
                 ProductsContract.ProductsEntry._ID,
@@ -378,7 +378,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context
-                mCurrentProductUri,         // Query the content URI for the current pet
+                mCurrentProductUri,         // Query the content URI for the current product
                 projection,             // Columns to include in the resulting Cursor
                 null,                   // No selection clause
                 null,                   // No selection arguments
@@ -396,7 +396,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
         // Proceed with moving to the first row of the cursor and reading data from it
         // (This should be the only row in the cursor)
-        if (cursor.moveToFirst()) { // Find the columns of pet attributes that we're interested in
+        if (cursor.moveToFirst()) { // Find the columns of product attributes that we're interested in
             int nameColumnIndex = cursor.getColumnIndex(ProductsContract.ProductsEntry.COLUMN_MOBILE_NAME);
             int priceColumnIndex = cursor.getColumnIndex(ProductsContract.ProductsEntry.COLUMN_MOBILE_PRICE);
             int quantityColumnIndex = cursor.getColumnIndex(ProductsContract.ProductsEntry.COLUMN_MOBILE_QUANTITY);
@@ -458,7 +458,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Keep editing" button, so dismiss the dialog
-                // and continue editing the pet.
+                // and continue editing the product.
                 if (dialog != null) {
                     dialog.dismiss();
                 }
@@ -472,7 +472,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
     @Override
     public void onBackPressed() {
-        // If the pet hasn't changed, continue with handling back button press
+        // If the product hasn't changed, continue with handling back button press
         if (!mProductHasChanged) {
             super.onBackPressed();
             return;
@@ -500,14 +500,14 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         builder.setMessage(R.string.delete_dialog_msg);
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Delete" button, so delete the pet.
-                deletePet();
+                // User clicked the "Delete" button, so delete the product.
+                deleteproduct();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Cancel" button, so dismiss the dialog
-                // and continue editing the pet.
+                // and continue editing the product.
                 if (dialog != null) {
                     dialog.dismiss();
                 }
@@ -520,16 +520,16 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     }
 
     /**
-     * Perform the deletion of the pet in the database.
+     * Perform the deletion of the product in the database.
      */
-    private void deletePet() {
+    private void deleteproduct() {
 
 // Deletes the words that match the selection criteria
-        // Only perform the delete if this is an existing pet.
+        // Only perform the delete if this is an existing product.
         if (mCurrentProductUri != null) {
-            // Call the ContentResolver to delete the pet at the given content URI.
-            // Pass in null for the selection and selection args because the mCurrentPetUri
-            // content URI already identifies the pet that we want.
+            // Call the ContentResolver to delete the product at the given content URI.
+            // Pass in null for the selection and selection args because the mCurrentproductUri
+            // content URI already identifies the product that we want.
             int rowsDeleted = getContentResolver().delete(mCurrentProductUri, null, null);
 
             // Show a toast message depending on whether or not the delete was successful.
@@ -548,6 +548,13 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     protected void sendEmail() {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
 
+        if(mEmailEditText.getText().toString().trim().equals("")) {
+           Toast.makeText(this,"The email cannot be empty value", Toast.LENGTH_LONG).show();
+            return;
+        }else if (!mEmailEditText.getText().toString().trim().matches("[a-zA-Z0-9._-]+@[a-z]+.[a-z]+")) {
+            Toast.makeText(this,"Invalid Email", Toast.LENGTH_LONG).show();
+            return;
+        }
         //RECEIVER
         intent.setType("text/plain");
         intent.setData(Uri.parse("mailto:" + mEmailEditText.getText().toString().trim()));

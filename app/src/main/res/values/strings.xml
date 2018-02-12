@@ -12,7 +12,7 @@
     <!-- Title for the activity to add a new product [CHAR LIMIT=20] -->
     <string name="editor_activity_title_new_product">Add a Mobile Product</string>
 
-    <!-- Title for the activity to add a new product [CHAR LIMIT=20] -->
+    <!-- Title for the activity to EDIT a new product [CHAR LIMIT=20] -->
     <string name="editor_activity_title_edit_mobile_product">Edit a Mobile Product</string>
 
     <!-- Dialog message when user is leaving editor but hasn't saved changes [CHAR LIMIT=NONE] -->
@@ -33,7 +33,7 @@
     <!-- Label for overview category of attributes in the editor [CHAR LIMIT=30] -->
     <string name="category_overview">Product Details</string>
 
-    <!-- Label for gender information in the editor [CHAR LIMIT=30] -->
+    <!-- Label for supplier name information in the editor [CHAR LIMIT=30] -->
     <string name="category_supplier_name">Supplier Name</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
@@ -44,21 +44,22 @@
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="hint_supplier_email">Email</string>
+
     <string name="hint_product_quantity">Quantity</string>
     <string name="category_supplier_email">Supplier Email</string>
     <string name="supplier_order_button">Order</string>
     <string name="supplier_delete_button">Delete</string>
 
-    <!-- Units for weight of the product (kilograms) [CHAR LIMIT=5] -->
+    <!-- Units for currency of the product ($) [CHAR LIMIT=5] -->
     <string name="unit_product_currency">$</string>
 
     <!-- Label for dropdown menu option if the product's gender is unknown [CHAR LIMIT=20] -->
     <string name="supplier_unknown">Unknown</string>
 
-    <!-- Label for dropdown menu option if the product is male [CHAR LIMIT=20] -->
+    <!-- Label for dropdown menu option if the product is Technology co [CHAR LIMIT=20] -->
     <string name="supplier_techno_company">Technology Company</string>
 
-    <!-- Label for dropdown menu option if the product is female [CHAR LIMIT=20] -->
+    <!-- Label for dropdown menu option if the product is Phone co [CHAR LIMIT=20] -->
     <string name="supplier_phone_company">Phone Company</string>
 
     <string name="editor_insert_product_failed">Failed insert product data</string>
@@ -69,7 +70,7 @@
 
     <string name="editor_update_product_successful">product updated successfully</string>
 
-    <!-- Title text for the empty view, which describes the empty dog house image [CHAR LIMIT=50] -->
+    <!-- Title text for the empty view, which describes the empty image [CHAR LIMIT=50] -->
     <string name="empty_view_title_text">There is no products in the store...</string>
 
     <!-- Subtitle text for the empty view that prompts the user to add a product [CHAR LIMIT=50] -->
@@ -91,14 +92,7 @@
     <string name="cancel">Cancel</string>
 
     <string name="editor_delete_all_products_finished">Delete all products finished!!</string>
-
-    <!-- Label for the product's breed if the breed is unknown [CHAR LIMIT=20] -->
-    <string name="unknown_breed">Unknown breed</string>
-
     <string name="button_sale">Sale</string>
     <string name="price_textView">Price: </string>
     <string name="supplier_save_button">Save</string>
-
-
-
 </resources>
