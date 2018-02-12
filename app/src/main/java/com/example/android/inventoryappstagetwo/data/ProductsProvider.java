@@ -227,14 +227,6 @@ public class ProductsProvider extends ContentProvider {
                 throw new IllegalArgumentException("Product requires valid supplier name");
             }
         }
-        if (values.containsKey(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_NAME)) {
-            //Check the phone number
-            Integer supplierPhone = values.getAsInteger(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_PHONE);
-
-            if (!ProductsContract.ProductsEntry.isValidSupplierName(supplierPhone)) {
-                throw new IllegalArgumentException("Product requires valid supplier phone");
-            }
-        }
         // No need to check the email any value is valid (including null).
 
         // If there are no values to update, then don't try to update the database

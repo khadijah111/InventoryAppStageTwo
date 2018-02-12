@@ -1,6 +1,7 @@
 package com.example.android.inventoryappstagetwo;
 
 import android.app.LoaderManager;
+import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
@@ -13,12 +14,14 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -85,7 +88,10 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
      */
     private int mSupplierName = ProductsContract.ProductsEntry.SUPPLIER_NAME_UNKNOWN; // mean= 0;
 
-    //private ProductDBHelper mDbHelper;
+    //Buttons
+    private Button mSaveButton;
+    private Button mOrderButton;
+    private Button mDeleteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,8 +127,10 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         mQuantityEditText = (EditText) findViewById(R.id.edit_product_quantity);
         mSupplierNameSpinner = (Spinner) findViewById(R.id.spinner_supplier_name);
         mEmailEditText = (EditText) findViewById(R.id.edit_product_email);
-       // mPhoneEditText = (EditText) findViewById(R.id.ed);
 
+        mSaveButton = (Button) findViewById(R.id.saveButton);
+        mOrderButton = (Button) findViewById(R.id.orderButton);
+        mDeleteButton = (Button) findViewById(R.id.deleteButton);
 
         mNameEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
@@ -132,6 +140,27 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
         setupSpinner();
 
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // save product or update product to DB
+                saveProduct();
+                //exit the current Activity then go to Main catalog activity
+                finish();
+            }
+        });
+
+        mOrderButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // order
+                sendEmail();
+            }
+        });
+
+        mDeleteButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Pop up confirmation dialog for deletion
+                showDeleteConfirmationDialog();            }
+        });
     }
 
     /**
@@ -515,5 +544,31 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             }
             finish();
         }
+    }
+    protected void sendEmail() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+
+        //RECEIVER
+        intent.setType("text/plain");
+        intent.setData(Uri.parse("mailto:" + mEmailEditText.getText().toString().trim()));
+
+        //SUBJECT
+        intent.putExtra(Intent.EXTRA_SUBJECT, "New order: " + mNameEditText.getText().toString().trim());
+
+        //MESSAGE
+        String message = "I want to request a new order from: " +  mNameEditText.getText().toString().trim() +
+                " With quantity of: " + mQuantityEditText.getText().toString().trim() + " Pcs, " + "\n" +
+                "Please confirm if you can send them to us." +  "\n\n"+ "Best regards," + "\n";
+
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, message);
+
+       try
+       {
+           startActivity(intent);
+           Log.i("Order Button: ", "Finished sending email");
+       }
+         catch (ActivityNotFoundException ex) {
+        Toast.makeText(DetailsActivity.this, ex.getMessage().toString(), Toast.LENGTH_SHORT).show();
+      }
     }
 }

@@ -9,6 +9,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -17,8 +18,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.support.design.widget.FloatingActionButton;
-
 
 import com.example.android.inventoryappstagetwo.data.ProductsContract;
 
@@ -46,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
-        // Display the number of rows in the Cursor (which reflects the number of rows in the
+         // Display the number of rows in the Cursor (which reflects the number of rows in the
         // pets table in the database).
         // Find ListView to populate
         ListView productsListView = (ListView) findViewById(R.id.listView);
@@ -80,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 startActivity(intent);
             }
         });
+
         // Prepare the loader.  Either re-connect with an existing one,
         // or start a new one.
         getLoaderManager().initLoader(LOADER_ID, null, this);
@@ -189,4 +189,32 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // longer using it.
         mProductCursorAdapter.swapCursor(null);
     }
+
+    /**
+     * Get user input from editor and save pet into database.
+     */
+    private void updateProductQuantity(Uri currentProductUri) {
+
+
+        ContentValues petValues = new ContentValues();
+
+
+        //Create a ContentValues object where column names are the keys
+        petValues.put(ProductsContract.ProductsEntry.COLUMN_MOBILE_QUANTITY, 40);
+
+            int rowsAffected = getContentResolver().update(currentProductUri, petValues, null, null);
+
+            // Show a toast message depending on whether or not the insertion was successful
+            if (rowsAffected == 0) {
+                // If the new content URI is null, then there was an error with insertion.
+                Toast.makeText(this, getString(R.string.editor_update_product_failed),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                // Otherwise, the insertion was successful and we can display a toast.
+                Toast.makeText(this, getString(R.string.editor_update_product_successful),
+                        Toast.LENGTH_SHORT).show();
+            }
+
+    }
+
 }
