@@ -29,6 +29,7 @@ public class ProductsContract {
         public final static String COLUMN_MOBILE_QUANTITY = "quantity";//INTEGER
         public final static String COLUMN_SUPPLIER_NAME = "supplierName";//INTEGER "UI spinner"
         public final static String COLUMN_SUPPLIER_EMAIL = "supplierEmail";//STRING
+        public final static String COLUMN_SUPPLIER_PHONE = "supplierPhone";//INTEGER
 
         public final static int SUPPLIER_NAME_UNKNOWN = 0;
         public final static int SUPPLIER_NAME_TECH_COMPANY = 1;

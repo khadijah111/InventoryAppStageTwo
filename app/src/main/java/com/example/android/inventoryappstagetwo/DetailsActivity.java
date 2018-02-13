@@ -60,11 +60,9 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
      * EditText field to enter the product's breed
      */
     private EditText mEmailEditText;
+    private EditText mCallEditText;
+    private Integer quantityHolder;
 
-    /**
-     * EditText field to enter the product's weight
-     */
-   // private EditText mPhoneEditText;
     /**
      * Content URI for the existing product (null if it's a new product)
      */
@@ -92,6 +90,9 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     private Button mSaveButton;
     private Button mOrderButton;
     private Button mDeleteButton;
+    private Button mCallButton;
+    private Button mPlusButton;
+    private Button mLessButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,17 +128,21 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         mQuantityEditText = (EditText) findViewById(R.id.edit_product_quantity);
         mSupplierNameSpinner = (Spinner) findViewById(R.id.spinner_supplier_name);
         mEmailEditText = (EditText) findViewById(R.id.edit_product_email);
+        mCallEditText = (EditText) findViewById(R.id.phoneEditText);
 
         mSaveButton = (Button) findViewById(R.id.saveButton);
         mOrderButton = (Button) findViewById(R.id.orderButton);
         mDeleteButton = (Button) findViewById(R.id.deleteButton);
+        mCallButton = (Button) findViewById(R.id.callButton);
+        mPlusButton = (Button) findViewById(R.id.plusButton);
+        mLessButton = (Button) findViewById(R.id.lessButton);
 
         mNameEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
         mQuantityEditText.setOnTouchListener(mTouchListener);
         mSupplierNameSpinner.setOnTouchListener(mTouchListener);
         mEmailEditText.setOnTouchListener(mTouchListener);
-
+        mCallEditText.setOnTouchListener(mTouchListener);
         setupSpinner();
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +150,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 // save product or update product to DB
                 saveProduct();
                 //exit the current Activity then go to Main catalog activity
-                finish();
+                //finish();
             }
         });
 
@@ -159,8 +164,55 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         mDeleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Pop up confirmation dialog for deletion
-                showDeleteConfirmationDialog();            }
+                showDeleteConfirmationDialog();
+            }
         });
+
+        mCallButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                call();
+            }
+        });
+
+        mPlusButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (mQuantityEditText.getText().toString().trim().equals("")) {
+                    quantityHolder = 0;
+                    mQuantityEditText.setText(String.valueOf(quantityHolder));
+                } else {
+                    quantityHolder = Integer.parseInt(mQuantityEditText.getText().toString().trim());
+                    quantityHolder++;
+                    mQuantityEditText.setText(String.valueOf(quantityHolder));
+                }
+            }
+        });
+
+        mLessButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (mQuantityEditText.getText().toString().trim().equals("") || Integer.parseInt(mQuantityEditText.getText().toString().trim()) == 0) {
+                    quantityHolder = 0;
+                    mQuantityEditText.setText(String.valueOf(quantityHolder));
+                } else {
+                    quantityHolder = Integer.parseInt(mQuantityEditText.getText().toString().trim());
+                    quantityHolder--;
+                    mQuantityEditText.setText(String.valueOf(quantityHolder));
+                }
+            }
+        });
+    }
+
+    private void call() {
+        if (mCallEditText.getText().toString().trim().equals("")) {
+            Toast.makeText(this, getString(R.string.phone_number_cannont_be_empty),
+                    Toast.LENGTH_LONG).show();
+            return;
+        } else {
+            String callNumString = mCallEditText.getText().toString().trim();
+            String uri = "tel:" + callNumString.trim();
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            intent.setData(Uri.parse(uri));
+            startActivity(intent);
+        }
     }
 
     /**
@@ -230,7 +282,6 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 // save product or update product to DB
                 saveProduct();
                 //exit the current Activity then go to Main catalog activity
-                finish();
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
@@ -266,8 +317,6 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         return super.onOptionsItemSelected(item);
     }
 
-    //get the data from textViews UI and INSERT it to the data base or UPDATE an existing fields
-
     /**
      * Get user input from editor and save product into database.
      */
@@ -280,24 +329,38 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         String quantityString = mQuantityEditText.getText().toString().trim();
         Integer supplierNameInteger = mSupplierName;
         String supplierEmailString = mEmailEditText.getText().toString().trim();
+        String supplierPhoneString = mCallEditText.getText().toString().trim();
 
         // Check if this is supposed to be a new product
         // and check if all the fields in the editor are blank
         //So return without any action needed
         if (mCurrentProductUri == null && //insert mode
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(priceString) &&
-                TextUtils.isEmpty(quantityString) && mSupplierName == ProductsContract.ProductsEntry.SUPPLIER_NAME_UNKNOWN) {
+                TextUtils.isEmpty(quantityString) && mSupplierName == ProductsContract.ProductsEntry.SUPPLIER_NAME_UNKNOWN
+                && TextUtils.isEmpty(supplierEmailString) && TextUtils.isEmpty(supplierPhoneString)) {
             // Since no fields were modified, we can return early without creating a new product.
             // No need to create ContentValues and no need to do any ContentProvider operations.
+            Toast.makeText(this, getString(R.string.all_field_cannot_be_null),
+                    Toast.LENGTH_SHORT).show();
             return;
         }
-        //Create a ContentValues object where column names are the keys
-        productValues.put(ProductsContract.ProductsEntry.COLUMN_MOBILE_NAME, nameString);
+        if (TextUtils.isEmpty(nameString)) {
+            Toast.makeText(this, getString(R.string.name_cannot_be_null),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            //Create a ContentValues object where column names are the keys
+            productValues.put(ProductsContract.ProductsEntry.COLUMN_MOBILE_NAME, nameString);
+        }
 
         // If the Price is not provided by the user, don't try to parse the string into an
         // integer value. Use 0 by default.
         int price = 0;
-        if (!TextUtils.isEmpty(priceString)) {
+        if (TextUtils.isEmpty(priceString)) {
+            Toast.makeText(this, getString(R.string.price_cannot_be_null),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        } else {
             price = Integer.parseInt(priceString);
         }
         productValues.put(ProductsContract.ProductsEntry.COLUMN_MOBILE_PRICE, price);
@@ -313,9 +376,24 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         //Create a ContentValues object where column names are the keys
         productValues.put(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_NAME, supplierNameInteger);
 
-        //Create a ContentValues object where column names are the keys
-        productValues.put(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_EMAIL, supplierEmailString);
 
+        if (TextUtils.isEmpty(supplierEmailString)) {
+            Toast.makeText(this, getString(R.string.email_cannot_be_null),
+                    Toast.LENGTH_SHORT).show();
+
+        } else {
+            //Create a ContentValues object where column names are the keys
+            productValues.put(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_EMAIL, supplierEmailString);
+        }
+
+        if (TextUtils.isEmpty(supplierPhoneString)) {
+            Toast.makeText(this, getString(R.string.phone_number_cannont_be_empty),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            //Create a ContentValues object where column names are the keys
+            productValues.put(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_PHONE, Integer.parseInt(supplierPhoneString));
+        }
         // If the intent DOES NOT contain a product content URI, then we know that we are
         // creating a new product -----------INSERT MODE-------------.
         if (mCurrentProductUri == null) {//INSERT new product
@@ -355,6 +433,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                         Toast.LENGTH_SHORT).show();
             }
         }
+        finish();
     }
 
     @Override
@@ -373,7 +452,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 ProductsContract.ProductsEntry.COLUMN_MOBILE_PRICE,
                 ProductsContract.ProductsEntry.COLUMN_MOBILE_QUANTITY,
                 ProductsContract.ProductsEntry.COLUMN_SUPPLIER_NAME,
-                ProductsContract.ProductsEntry.COLUMN_SUPPLIER_EMAIL
+                ProductsContract.ProductsEntry.COLUMN_SUPPLIER_EMAIL,
+                ProductsContract.ProductsEntry.COLUMN_SUPPLIER_PHONE
         };
 
         // This loader will execute the ContentProvider's query method on a background thread
@@ -402,7 +482,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             int quantityColumnIndex = cursor.getColumnIndex(ProductsContract.ProductsEntry.COLUMN_MOBILE_QUANTITY);
             int supplierNameColumnIndex = cursor.getColumnIndex(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_NAME);
             int supplierEmailColumnIndex = cursor.getColumnIndex(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_EMAIL);
-
+            int supplierPhoneColumnIndex = cursor.getColumnIndex(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_PHONE);
 
             // Extract out the value from the Cursor for the given column index
             String name = cursor.getString(nameColumnIndex);
@@ -410,14 +490,14 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
             int quantity = cursor.getInt(quantityColumnIndex);
             int supplierName = cursor.getInt(supplierNameColumnIndex);
             String supplierEmail = cursor.getString(supplierEmailColumnIndex);
-
+            int phone = cursor.getInt(supplierPhoneColumnIndex);
 
             // Update the views on the screen with the values from the database
             mNameEditText.setText(name);
             mPriceEditText.setText(Integer.toString(price));
             mQuantityEditText.setText(Integer.toString(quantity));
             mEmailEditText.setText(supplierEmail);
-
+            mCallEditText.setText(Integer.toString(phone));
 
             // Gender is a dropdown spinner, so map the constant value from the database
             // into one of the dropdown options (0 is Unknown, 1 is Male, 2 is Female).
@@ -444,8 +524,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         mQuantityEditText.setText("");
         mSupplierNameSpinner.setSelection(0); // Select "Unknown" gender
         mEmailEditText.setText("");
+        mCallEditText.setText("");
     }
-
 
 
     private void showUnsavedChangesDialog(
@@ -539,20 +619,21 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                         Toast.LENGTH_LONG).show();
             } else {
                 // Otherwise, the delete was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.editor_update_product_successful),
+                Toast.makeText(this, getString(R.string.editor_delete_product_successful),
                         Toast.LENGTH_LONG).show();
             }
             finish();
         }
     }
+
     protected void sendEmail() {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
 
-        if(mEmailEditText.getText().toString().trim().equals("")) {
-           Toast.makeText(this,"The email cannot be empty value", Toast.LENGTH_LONG).show();
+        if (mEmailEditText.getText().toString().trim().equals("")) {
+            Toast.makeText(this, "The email cannot be empty value", Toast.LENGTH_LONG).show();
             return;
-        }else if (!mEmailEditText.getText().toString().trim().matches("[a-zA-Z0-9._-]+@[a-z]+.[a-z]+")) {
-            Toast.makeText(this,"Invalid Email", Toast.LENGTH_LONG).show();
+        } else if (!mEmailEditText.getText().toString().trim().matches("[a-zA-Z0-9._-]+@[a-z]+.[a-z]+")) {
+            Toast.makeText(this, "Invalid Email", Toast.LENGTH_LONG).show();
             return;
         }
         //RECEIVER
@@ -563,19 +644,17 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         intent.putExtra(Intent.EXTRA_SUBJECT, "New order: " + mNameEditText.getText().toString().trim());
 
         //MESSAGE
-        String message = "I want to request a new order from: " +  mNameEditText.getText().toString().trim() +
+        String message = "I want to request a new order from: " + mNameEditText.getText().toString().trim() +
                 " With quantity of: " + mQuantityEditText.getText().toString().trim() + " Pcs, " + "\n" +
-                "Please confirm if you can send them to us." +  "\n\n"+ "Best regards," + "\n";
+                "Please confirm if you can send them to us." + "\n\n" + "Best regards," + "\n";
 
         intent.putExtra(android.content.Intent.EXTRA_TEXT, message);
 
-       try
-       {
-           startActivity(intent);
-           Log.i("Order Button: ", "Finished sending email");
-       }
-         catch (ActivityNotFoundException ex) {
-        Toast.makeText(DetailsActivity.this, ex.getMessage().toString(), Toast.LENGTH_SHORT).show();
-      }
+        try {
+            startActivity(intent);
+            Log.i("Order Button: ", "Finished sending email");
+        } catch (ActivityNotFoundException ex) {
+            Toast.makeText(DetailsActivity.this, ex.getMessage().toString(), Toast.LENGTH_SHORT).show();
+        }
     }
 }

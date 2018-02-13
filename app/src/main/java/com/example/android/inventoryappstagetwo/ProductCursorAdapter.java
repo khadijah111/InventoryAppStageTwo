@@ -27,14 +27,13 @@ public class ProductCursorAdapter extends CursorAdapter {
     //private Context mContexts;
 
     /**
-     *
      * @param context The context
      * @param c       The cursor from which to get the data.
      */
     public ProductCursorAdapter(Context context, Cursor c) {
 
         super(context, c, 0 /* flags */);
-       // mContexts = context;
+        // mContexts = context;
     }
 
     /**
@@ -48,7 +47,7 @@ public class ProductCursorAdapter extends CursorAdapter {
      */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(R.layout.list_item,parent,false);
+        return LayoutInflater.from(context).inflate(R.layout.list_item, parent, false);
     }
 
     /**
@@ -64,9 +63,9 @@ public class ProductCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(final View view, final Context context, final Cursor cursor) {
         // Find fields
-        TextView tvProductName = (TextView)view.findViewById(R.id.name);
-        TextView tvProductPrice = (TextView)view.findViewById(R.id.price);
-        TextView tvProductQuantity = (TextView)view.findViewById(R.id.quantity);
+        TextView tvProductName = (TextView) view.findViewById(R.id.name);
+        TextView tvProductPrice = (TextView) view.findViewById(R.id.price);
+        TextView tvProductQuantity = (TextView) view.findViewById(R.id.quantity);
         final Button quantityButton = (Button) view.findViewById(R.id.saleButton);
         final int id = cursor.getInt(cursor.getColumnIndex(ProductsContract.ProductsEntry._ID));
 
@@ -101,8 +100,8 @@ public class ProductCursorAdapter extends CursorAdapter {
                     //read quantity
                     int quantityValue = productQuantity;
 
-                    Log.i("INFO", "NEW Quantity " + String.valueOf(quantityValue-1));
-                    values.put(ProductsContract.ProductsEntry.COLUMN_MOBILE_QUANTITY, quantityValue-1);
+                    Log.i("INFO", "NEW Quantity " + String.valueOf(quantityValue - 1));
+                    values.put(ProductsContract.ProductsEntry.COLUMN_MOBILE_QUANTITY, quantityValue - 1);
                     resolver.update(
                             currentProductUri,
                             values,
@@ -110,8 +109,7 @@ public class ProductCursorAdapter extends CursorAdapter {
                             null);
 
                     context.getContentResolver().notifyChange(currentProductUri, null);
-                }
-                else {
+                } else {
                     Toast.makeText(context, "Product out of stock", Toast.LENGTH_SHORT).show();
                 }
             }

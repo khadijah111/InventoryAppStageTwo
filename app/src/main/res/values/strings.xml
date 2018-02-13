@@ -94,5 +94,15 @@
     <string name="editor_delete_all_products_finished">Delete all products finished!!</string>
     <string name="button_sale">Sale</string>
     <string name="price_textView">Price: </string>
+    <string name="phone_textView">Phone: </string>
+    <string name="hint_product_phone">Phone Num. </string>
     <string name="supplier_save_button">Save</string>
+    <string name="supplier_call_button">Call</string>
+    <string name="plus_button">+</string>
+    <string name="less_button">-</string>
+    <string name="phone_number_cannont_be_empty">Phone number cannot be empty!!</string>
+    <string name="name_cannot_be_null">Name of product cannot be null!!</string>
+    <string name="price_cannot_be_null">Price of product cannot be null!!</string>
+    <string name="email_cannot_be_null">Email of supplier cannot be null!!</string>
+    <string name="all_field_cannot_be_null">Please fill all the fields before save!!</string>
 </resources>

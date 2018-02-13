@@ -1,4 +1,5 @@
 package com.example.android.inventoryappstagetwo.data;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -17,7 +18,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
     /**
      * Name of the database file
      */
-    public static final String DATABASE_NAME = "Products.db";
+    public static final String DATABASE_NAME = "Products1.db";
 
     //CONSTRUCTOR
     public ProductDBHelper(Context context) {
@@ -34,12 +35,14 @@ public class ProductDBHelper extends SQLiteOpenHelper {
                 + ProductsContract.ProductsEntry.COLUMN_MOBILE_PRICE + " INTEGER NOT NULL DEFAULT 0, "
                 + ProductsContract.ProductsEntry.COLUMN_MOBILE_QUANTITY + " INTEGER, "
                 + ProductsContract.ProductsEntry.COLUMN_SUPPLIER_NAME + " INTEGER , "
+                + ProductsContract.ProductsEntry.COLUMN_SUPPLIER_PHONE + " INTEGER , "
                 + ProductsContract.ProductsEntry.COLUMN_SUPPLIER_EMAIL + " TEXT );";
         db.execSQL(SQL_CREATE_PRODUCTS_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // The database is still at version 1, so there's nothing to do be done here.
+        onCreate(db);
+        //db.execSQL(SQL_DELETE_ENTRIES);
     }
 }

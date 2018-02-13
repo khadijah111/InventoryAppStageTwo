@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,33 +15,60 @@
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_overview"
-            style="@style/CategoryStyle" />
+            style="@style/CategoryStyle"
+            android:text="@string/category_overview" />
 
         <!-- Input fields -->
         <LinearLayout
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:paddingLeft="4dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="4dp">
 
             <!-- Name field -->
             <EditText
                 android:id="@+id/edit_product_name"
-                android:hint="@string/hint_product_name"
-                android:inputType="textCapWords"
-                style="@style/EditorFieldStyle" />
-
-            <!-- Quantity field -->
-            <EditText
-                android:id="@+id/edit_product_quantity"
-                android:hint="@string/hint_product_quantity"
                 style="@style/EditorFieldStyle"
-                android:inputType="number"/>
+                android:hint="@string/hint_product_name"
+                android:inputType="textCapWords" />
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/plusButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
+            android:background="@color/colorAccent"
+            android:padding="15dp"
+            android:text="@string/plus_button" />
+        <!-- Quantity field -->
+
+        <EditText
+            android:id="@+id/edit_product_quantity"
+            style="@style/EditorFieldStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_product_quantity"
+            android:inputType="number" />
+
+        <Button
+            android:id="@+id/lessButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
+            android:background="@color/colorAccent"
+            android:padding="15dp"
+            android:text="@string/less_button" />
+    </LinearLayout>
     <!-- Price category -->
     <LinearLayout
         android:id="@+id/container_price"
@@ -52,28 +78,28 @@
 
         <!-- Label -->
         <TextView
-            android:text="@string/price_textView"
-            style="@style/CategoryStyle" />
+            style="@style/CategoryStyle"
+            android:text="@string/price_textView" />
 
         <!-- Price fields -->
         <RelativeLayout
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
             android:paddingLeft="4dp">
 
             <!-- Price field -->
             <EditText
                 android:id="@+id/edit_product_price"
+                style="@style/EditorFieldStyle"
                 android:hint="@string/hint_product_price"
-                android:inputType="number"
-                style="@style/EditorFieldStyle" />
+                android:inputType="number" />
 
             <!-- Units for weight (kg) -->
             <TextView
                 android:id="@+id/label_price_units"
-                android:text="@string/unit_product_currency"
-                style="@style/EditorUnitsStyle"/>
+                style="@style/EditorUnitsStyle"
+                android:text="@string/unit_product_currency" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -86,23 +112,23 @@
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_supplier_name"
-            style="@style/CategoryStyle" />
+            style="@style/CategoryStyle"
+            android:text="@string/category_supplier_name" />
 
         <!-- Input field -->
         <LinearLayout
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
             android:orientation="vertical">
 
             <!-- Supplier name drop-down spinner -->
             <Spinner
                 android:id="@+id/spinner_supplier_name"
-                android:layout_height="48dp"
                 android:layout_width="wrap_content"
+                android:layout_height="48dp"
                 android:paddingRight="16dp"
-                android:spinnerMode="dropdown"/>
+                android:spinnerMode="dropdown" />
         </LinearLayout>
     </LinearLayout>
 
@@ -115,23 +141,49 @@
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_supplier_email"
-            style="@style/CategoryStyle" />
+            style="@style/CategoryStyle"
+            android:text="@string/category_supplier_email" />
 
         <!-- Input fields -->
         <RelativeLayout
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="2"
             android:paddingLeft="4dp">
 
             <!-- Email field -->
             <EditText
                 android:id="@+id/edit_product_email"
+                style="@style/EditorFieldStyle"
                 android:hint="@string/hint_supplier_email"
-                android:inputType="text"
-                style="@style/EditorFieldStyle" />
+                android:inputType="text" />
 
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!-- phone num-->
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="@string/phone_textView" />
+
+        <!-- Input fields -->
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:paddingLeft="4dp">
+
+            <EditText
+                android:id="@+id/phoneEditText"
+                style="@style/EditorFieldStyle"
+                android:hint="@string/hint_product_phone"
+                android:inputType="number" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -140,36 +192,60 @@
         android:id="@+id/container_Buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
-            android:layout_margin="15dp"
-            android:padding="15dp"
-            android:id="@+id/saveButton"
-            android:text="@string/supplier_save_button"
-            android:layout_weight="1"/>
+        android:orientation="vertical">
 
-        <Button
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/container_Buttons1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
-            android:layout_margin="15dp"
-            android:padding="15dp"
-            android:id="@+id/deleteButton"
-            android:text="@string/supplier_delete_button"
-            android:layout_weight="1"/>
+            android:orientation="horizontal">
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
-            android:layout_margin="15dp"
-            android:padding="15dp"
-            android:id="@+id/orderButton"
-            android:text="@string/supplier_order_button"
-            android:layout_weight="1"/>
+            <Button
+                android:id="@+id/saveButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:layout_weight="1"
+                android:background="@color/colorAccent"
+                android:padding="15dp"
+                android:text="@string/supplier_save_button" />
+
+            <Button
+                android:id="@+id/deleteButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:layout_weight="1"
+                android:background="@color/colorAccent"
+                android:padding="15dp"
+                android:text="@string/supplier_delete_button" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/container_Buttons2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/orderButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:layout_weight="1"
+                android:background="@color/colorAccent"
+                android:padding="15dp"
+                android:text="@string/supplier_order_button" />
+
+            <Button
+                android:id="@+id/callButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:layout_weight="1"
+                android:background="@color/colorAccent"
+                android:padding="15dp"
+                android:text="@string/supplier_call_button" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
-         // Display the number of rows in the Cursor (which reflects the number of rows in the
+        // Display the number of rows in the Cursor (which reflects the number of rows in the
         // pets table in the database).
         // Find ListView to populate
         ListView productsListView = (ListView) findViewById(R.id.listView);
@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         petValues.put(ProductsContract.ProductsEntry.COLUMN_MOBILE_QUANTITY, 10);
         petValues.put(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_NAME, ProductsContract.ProductsEntry.SUPPLIER_NAME_TECH_COMPANY);
         petValues.put(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_EMAIL, "om.albaraa33@gmail.com");
+        petValues.put(ProductsContract.ProductsEntry.COLUMN_SUPPLIER_PHONE, 123456758);
 
         // Insert a new row for Toto into the provider using the ContentResolver.
         // Use the {@link PetEntry#CONTENT_URI} to indicate that we want to insert
@@ -161,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 ProductsContract.ProductsEntry.COLUMN_MOBILE_QUANTITY,
                 ProductsContract.ProductsEntry.COLUMN_SUPPLIER_NAME,
                 ProductsContract.ProductsEntry.COLUMN_SUPPLIER_EMAIL,
+                ProductsContract.ProductsEntry.COLUMN_SUPPLIER_PHONE
         };
 
         return new CursorLoader(
